@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Face</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        AI Attendance
+    </div>
+
+    <ul class="nav-links">
+        <li>
+            <a href="register.html" class="active">Register Face</a>
+        </li>
+
+        <li>
+            <a href="attendance.html">Attendance</a>
+        </li>
+    </ul>
+
+</nav>
+
+<div class="container">
+
+    <h1>Register Student Face</h1>
+
+    <label>Scope</label>
+    <input
+        type="text"
+        id="scope"
+        placeholder="Optional"
+    >
+
+    <label>Face Images</label>
+
+    <input
+        type="file"
+        id="images"
+        accept="image/*"
+        multiple
+    >
+
+    <div id="imageList"></div>
+
+    <button type="button" id="registerBtn">
+        Register Face
+    </button>
+
+    <div id="result"></div>
+
+</div>
+
+<script src="js/register.js"></script>
+
+</body>
+</html>
