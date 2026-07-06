@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance Verification</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            AI Attendance
+        </div>
+
+        <ul class="nav-links">
+            <li>
+                <a href="register.html">Register Face</a>
+            </li>
+
+            <li>
+                <a href="attendance.html" class="active">Attendance</a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <div class="container">
+
+        <h1>Attendance Verification</h1>
+
+        <label>Scope</label>
+        <input
+            type="text"
+            id="scope"
+            placeholder="SCH001/12/A">
+
+        <label>Attendance Images</label>
+        <input
+            type="file"
+            id="images"
+            multiple
+            accept="image/*">
+
+        <button id="verifyBtn">
+            Verify Attendance
+        </button>
+
+        <div id="result"></div>
+
+    </div>
+
+    <script src="js/attendance.js"></script>
+
+</body>
+
+</html>
