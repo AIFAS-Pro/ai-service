@@ -1,0 +1,15 @@
+.env
+venv/
+__pycache__/
+*.pyc
+*.sqlite3
+media/students/*
+media/attendance/*
+media/embeddings/*
+!media/students/.gitkeep
+!media/attendance/.gitkeep
+!media/embeddings/.gitkeep
+node_modules/
+dist/
+.vite/
+ai-service/embeddings/*
