@@ -31,24 +31,46 @@
 
         <h1>Attendance Verification</h1>
 
-        <label>Scope</label>
+        <label>School ID</label>
         <input
             type="text"
-            id="scope"
-            placeholder="SCH001/12/A">
+            id="schoolId"
+            placeholder="SCH001"
+        >
+
+        <label>Academic Year</label>
+        <input
+            type="text"
+            id="academicYear"
+            placeholder="2026-2027"
+        >
+
+        <label>Student IDs (Optional)</label>
+        <input
+            type="text"
+            id="studentIds"
+            placeholder="ST001,ST002,ST003"
+        >
 
         <label>Attendance Images</label>
         <input
             type="file"
             id="images"
             multiple
-            accept="image/*">
+            accept="image/*"
+        >
 
         <button id="verifyBtn">
             Verify Attendance
         </button>
 
-        <div id="result"></div>
+        <div id="result">
+
+            <div id="summary"></div>
+
+            <div class="table-container" id="attendanceTable"></div>
+
+        </div>
 
     </div>
 

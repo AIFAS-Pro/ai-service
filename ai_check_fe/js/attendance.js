@@ -1,102 +1,160 @@
 const API = "http://127.0.0.1:8000";
 
-document
-    .getElementById("verifyBtn")
-    .addEventListener("click", async () => {
+const verifyBtn = document.getElementById("verifyBtn");
 
-        const files = document.getElementById("images").files;
-        const scope = document.getElementById("scope").value;
+verifyBtn.addEventListener("click", async () => {
 
-        if (files.length === 0) {
-            alert("Select attendance images");
-            return;
-        }
+    const files = document.getElementById("images").files;
+    const schoolId = document.getElementById("schoolId").value.trim();
+    const academicYear = document.getElementById("academicYear").value.trim();
+    const studentIds = document.getElementById("studentIds").value.trim();
 
-        const formData = new FormData();
+    if (!schoolId) {
+        alert("Enter School ID");
+        return;
+    }
 
-        for (const file of files) {
-            formData.append("images", file);
-        }
+    if (!academicYear) {
+        alert("Enter Academic Year");
+        return;
+    }
 
-        if (scope) {
-            formData.append("scope", scope);
-        }
+    if (files.length === 0) {
+        alert("Select attendance images");
+        return;
+    }
 
-        const result = document.getElementById("result");
+    const summary = document.getElementById("summary");
+    const table = document.getElementById("attendanceTable");
 
-        result.innerHTML = "<p>Processing...</p>";
+    summary.innerHTML = "<p>Processing...</p>";
+    table.innerHTML = "";
 
-        try {
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = "Verifying...";
 
-            const response = await fetch(`${API}/verify-attendance`, {
-                method: "POST",
-                body: formData
-            });
+    const formData = new FormData();
 
-            const data = await response.json();
+    formData.append("school_id", schoolId);
+    formData.append("academic_year", academicYear);
 
-            if (!response.ok) {
-                result.innerHTML = `<p class="error">${data.detail}</p>`;
-                return;
-            }
+    if (studentIds !== "") {
+        formData.append("student_ids", studentIds);
+    }
 
-            let html = `
-                <div class="table-container">
+    for (const file of files) {
+        formData.append("images", file);
+    }
 
-                    <table>
+    try {
 
-                        <thead>
+        const response = await fetch(`${API}/verify-attendance`, {
+            method: "POST",
+            body: formData
+        });
 
-                            <tr>
-                                <th>#</th>
-                                <th>Student ID</th>
-                                <th>Status</th>
-                            </tr>
+        const data = await response.json();
 
-                        </thead>
+        if (!response.ok) {
 
-                        <tbody>
-            `;
-
-            data.students.forEach((student, index) => {
-
-                html += `
-                    <tr>
-
-                        <td>${index + 1}</td>
-
-                        <td>${student.student_id}</td>
-
-                        <td>
-                            <span class="badge ${student.status.toLowerCase() === 'present' ? 'present' : 'absent'}">
-                                ${student.status}
-                            </span>
-                        </td>
-
-                    </tr>
-                `;
-
-            });
-
-            html += `
-                        </tbody>
-
-                    </table>
-
+            summary.innerHTML = `
+                <div class="error">
+                    ${data.detail}
                 </div>
             `;
 
-            result.innerHTML = html;
+            table.innerHTML = "";
 
+            return;
         }
-        catch (error) {
 
-            result.innerHTML = `
-                <p class="error">
-                    ${error.message}
-                </p>
+        summary.innerHTML = `
+            <div class="success-card">
+
+                <h3>Verification Completed</h3>
+
+                <p><strong>School ID:</strong> ${data.school_id}</p>
+
+                <p><strong>Academic Year:</strong> ${data.academic_year}</p>
+
+                <p><strong>Images Uploaded:</strong> ${data.image_count}</p>
+
+                <p><strong>Detected Faces:</strong> ${data.detected_faces}</p>
+
+                <p><strong>Registered Students:</strong> ${data.students.length}</p>
+
+                <p><strong>Matched Students:</strong> ${data.matches.length}</p>
+
+            </div>
+        `;
+
+        let html = `
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Student ID</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+        `;
+
+        data.students.forEach((student, index) => {
+
+            html += `
+                <tr>
+
+                    <td>${index + 1}</td>
+
+                    <td>${student.student_id}</td>
+
+                    <td>
+
+                        <span class="badge ${student.status.toLowerCase() === "present" ? "present" : "absent"}">
+
+                            ${student.status}
+
+                        </span>
+
+                    </td>
+
+                </tr>
             `;
 
-        }
+        });
 
-    });
+        html += `
+                </tbody>
+
+            </table>
+        `;
+
+        table.innerHTML = html;
+
+    } catch (error) {
+
+        summary.innerHTML = `
+            <div class="error">
+                ${error.message}
+            </div>
+        `;
+
+        table.innerHTML = "";
+
+    } finally {
+
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = "Verify Attendance";
+
+    }
+
+});
