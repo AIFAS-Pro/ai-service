@@ -6,3 +6,6 @@ onnxruntime==1.27.0
 opencv-python-headless==4.10.0.84
 numpy==1.26.4
 pydantic-settings==2.7.1
+pymongo==4.7.2
+motor==4.3.3
+dnspython==3.8.2
