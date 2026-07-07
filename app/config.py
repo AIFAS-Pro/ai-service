@@ -1,11 +1,11 @@
-from pathlib import Path
-
 from pydantic import computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    embeddings_dir: Path
+    mongodb_uri: str
+    mongodb_database: str
+    gridfs_bucket: str
     similarity_threshold: float
     verification_max_workers: int
     device: str
@@ -37,4 +37,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-settings.embeddings_dir.mkdir(parents=True, exist_ok=True)
