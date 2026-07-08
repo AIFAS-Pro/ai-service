@@ -6,7 +6,7 @@ verifyBtn.addEventListener("click", async () => {
 
     const files = document.getElementById("images").files;
     const schoolId = document.getElementById("schoolId").value.trim();
-    const academicYear = document.getElementById("academicYear").value.trim();
+    // const academicYear = document.getElementById("academicYear").value.trim();
     const studentIds = document.getElementById("studentIds").value.trim();
 
     if (!schoolId) {
@@ -14,10 +14,10 @@ verifyBtn.addEventListener("click", async () => {
         return;
     }
 
-    if (!academicYear) {
-        alert("Enter Academic Year");
-        return;
-    }
+    // if (!academicYear) {
+    //     alert("Enter Academic Year");
+    //     return;
+    // }
 
     if (files.length === 0) {
         alert("Select attendance images");
@@ -36,7 +36,7 @@ verifyBtn.addEventListener("click", async () => {
     const formData = new FormData();
 
     formData.append("school_id", schoolId);
-    formData.append("academic_year", academicYear);
+    // formData.append("academic_year", academicYear);
 
     if (studentIds !== "") {
         formData.append("student_ids", studentIds);
@@ -74,8 +74,6 @@ verifyBtn.addEventListener("click", async () => {
                 <h3>Verification Completed</h3>
 
                 <p><strong>School ID:</strong> ${data.school_id}</p>
-
-                <p><strong>Academic Year:</strong> ${data.academic_year}</p>
 
                 <p><strong>Images Uploaded:</strong> ${data.image_count}</p>
 

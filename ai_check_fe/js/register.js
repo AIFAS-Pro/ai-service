@@ -2,7 +2,7 @@ const API = "http://127.0.0.1:8000";
 
 const imageInput = document.getElementById("images");
 const schoolIdInput = document.getElementById("schoolId");
-const academicYearInput = document.getElementById("academicYear");
+// const academicYearInput = document.getElementById("academicYear");
 const button = document.getElementById("registerBtn");
 const result = document.getElementById("result");
 const imageList = document.getElementById("imageList");
@@ -65,17 +65,17 @@ button.addEventListener("click", async (event) => {
     }
 
     const schoolId = schoolIdInput.value.trim();
-    const academicYear = academicYearInput.value.trim();
+    // const academicYear = academicYearInput.value.trim();
 
     if (!schoolId) {
         alert("Please enter School ID.");
         return;
     }
 
-    if (!academicYear) {
-        alert("Please enter Academic Year.");
-        return;
-    }
+    // if (!academicYear) {
+    //     alert("Please enter Academic Year.");
+    //     return;
+    // }
 
     const studentInputs = document.querySelectorAll(".student-id");
 
@@ -113,7 +113,7 @@ button.addEventListener("click", async (event) => {
 
         formData.append("school_id", schoolId);
         formData.append("student_id", studentID);
-        formData.append("academic_year", academicYear);
+        // formData.append("academic_year", academicYear);
         formData.append("image", file);
 
         try {
@@ -184,7 +184,7 @@ button.addEventListener("click", async (event) => {
     imageInput.value = "";
     imageList.innerHTML = "";
     schoolIdInput.value = "";
-    academicYearInput.value = "";
+    // academicYearInput.value = "";
     selectedFiles = [];
 
     button.disabled = false;
