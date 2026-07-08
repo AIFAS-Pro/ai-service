@@ -4,7 +4,6 @@ from gridfs import GridFSBucket
 from app.config import settings
 
 client = MongoClient(settings.mongodb_uri)
-
 db = client[settings.mongodb_database]
 
 bucket = GridFSBucket(
@@ -14,11 +13,10 @@ bucket = GridFSBucket(
 
 files_collection = db[f"{settings.gridfs_bucket}.files"]
 
-files_collection.create_index(
+index_name = files_collection.create_index(
     [
         ("metadata.school_id", ASCENDING),
         ("metadata.student_id", ASCENDING),
-        ("metadata.academic_year", ASCENDING),
     ],
     unique=True,
 )

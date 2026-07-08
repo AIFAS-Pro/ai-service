@@ -42,7 +42,7 @@ def health() -> dict[str, str]:
 async def register_face(
     school_id: str = Form(...),
     student_id: str = Form(...),
-    academic_year: str = Form(...),
+    # academic_year: str = Form(...),
     image: UploadFile = File(...),
 ) -> dict[str, str]:
     try:
@@ -58,7 +58,7 @@ async def register_face(
             face_engine=get_face_engine(),
             school_id=school_id.strip(),
             student_id=student_id.strip(),
-            academic_year=academic_year.strip(),
+            # academic_year=academic_year.strip(),
             image_bytes=image_bytes,
         )
 
@@ -78,7 +78,7 @@ async def register_face(
 @app.post("/verify-attendance")
 async def verify_attendance(
     school_id: str = Form(...),
-    academic_year: str = Form(...),
+    # academic_year: str = Form(...),
     images: list[UploadFile] = File(...),
     student_ids: str | None = Form(default=None),
 ) -> dict[str, object]:
@@ -109,7 +109,7 @@ async def verify_attendance(
         return verify_attendance_images(
             face_engine=get_face_engine(),
             school_id=school_id.strip(),
-            academic_year=academic_year.strip(),
+            # academic_year=academic_year.strip(),
             student_ids=parsed_student_ids,
             image_bytes_list=image_bytes_list,
         )

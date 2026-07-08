@@ -13,7 +13,7 @@ def register_student_face(
     face_engine: FaceEngine,
     school_id: str,
     student_id: str,
-    academic_year: str,
+    # academic_year: str,
     image_bytes: bytes,
 ) -> dict[str, str]:
 
@@ -27,13 +27,13 @@ def register_student_face(
     delete_embedding(
         school_id=school_id,
         student_id=student_id,
-        academic_year=academic_year,
+        # academic_year=academic_year,
     )
 
     save_embedding(
         school_id=school_id,
         student_id=student_id,
-        academic_year=academic_year,
+        # academic_year=academic_year,
         embedding=embeddings[0],
     )
 
@@ -41,19 +41,19 @@ def register_student_face(
         "status": "success",
         "school_id": school_id,
         "student_id": student_id,
-        "academic_year": academic_year,
+        # "academic_year": academic_year,
         "storage": "gridfs",
     }
 
 
 def load_known_embeddings(
     school_id: str,
-    academic_year: str,
+    # academic_year: str,
     student_ids: list[str] | None = None,
 ) -> dict[str, np.ndarray]:
     return load_embeddings(
         school_id=school_id,
-        academic_year=academic_year,
+        # academic_year=academic_year,
         student_ids=student_ids,
     )
 
@@ -62,14 +62,14 @@ def verify_attendance_image(
     face_engine: FaceEngine,
     image_bytes: bytes,
     school_id: str,
-    academic_year: str,
+    # academic_year: str,
     student_ids: list[str] | None = None,
 ) -> dict[str, object]:
     return verify_attendance_images(
         face_engine=face_engine,
         image_bytes_list=[image_bytes],
         school_id=school_id,
-        academic_year=academic_year,
+        # academic_year=academic_year,
         student_ids=student_ids,
     )
 
@@ -78,7 +78,7 @@ def verify_attendance_images(
     face_engine: FaceEngine,
     image_bytes_list: list[bytes],
     school_id: str,
-    academic_year: str,
+    # academic_year: str,
     student_ids: list[str] | None = None,
 ) -> dict[str, object]:
 
@@ -87,7 +87,7 @@ def verify_attendance_images(
 
     known_embeddings = load_known_embeddings(
         school_id=school_id,
-        academic_year=academic_year,
+        # academic_year=academic_year,
         student_ids=student_ids,
     )
 
@@ -145,7 +145,7 @@ def verify_attendance_images(
     return {
         "status": "success",
         "school_id": school_id,
-        "academic_year": academic_year,
+        # "academic_year": academic_year,
         "image_count": len(image_bytes_list),
         "detected_faces": sum(
             len(embeddings)
