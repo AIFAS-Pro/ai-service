@@ -58,18 +58,23 @@ def load_embedding(
 def delete_embedding(
     school_id: str,
     student_id: str,
-    # academic_year: str,
-) -> None:
-    files = files_collection.find(
-        {
-            "metadata.school_id": school_id,
-            "metadata.student_id": student_id,
-            # "metadata.academic_year": academic_year,
-        }
+) -> bool:
+    files = list(
+        files_collection.find(
+            {
+                "metadata.school_id": school_id,
+                "metadata.student_id": student_id,
+            }
+        )
     )
+
+    if not files:
+        return False
 
     for file in files:
         bucket.delete(file["_id"])
+
+    return True
 
 
 def load_embeddings(
