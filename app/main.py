@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from app.gridfs_storage import delete_embedding
 
 from app.model_loader import get_face_engine, load_face_engine
 from app.recognition import (
@@ -119,6 +120,37 @@ async def verify_attendance(
             status_code=422,
             detail=str(exc),
         ) from exc
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail="Internal server error.",
+        ) from exc
+
+
+@app.delete("/delete-face")
+async def delete_face(
+    school_id: str = Form(...),
+    student_id: str = Form(...),
+) -> dict[str, str]:
+    try:
+        deleted = delete_embedding(
+            school_id=school_id.strip(),
+            student_id=student_id.strip(),
+        )
+
+        if not deleted:
+            raise HTTPException(
+                status_code=404,
+                detail="Face embedding not found.",
+            )
+
+        return {
+            "message": "Face embedding deleted successfully."
+        }
+
+    except HTTPException:
+        raise
 
     except Exception as exc:
         raise HTTPException(
