@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Delete Face</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            AI Attendance
+        </div>
+        <ul class="nav-links">
+            <li>
+                <a href="register.html">
+                    Register Face
+                </a>
+            </li>
+            <li>
+                <a href="attendance.html">
+                    Attendance
+                </a>
+            </li>
+            <li>
+                <a href="delete-face.html" class="active">
+                    Delete Face
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Delete Student Face</h1>
+
+        <!-- School ID -->
+        <label for="schoolId">
+            School ID
+        </label>
+        <input
+            type="text"
+            id="schoolId"
+            placeholder="e.g. SCH001"
+        >
+
+        <!-- Student ID -->
+        <label for="studentId">
+            Student ID
+        </label>
+        <input
+            type="text"
+            id="studentId"
+            placeholder="e.g. STU001"
+        >
+
+        <!-- Delete Button -->
+        <button
+            type="button"
+            id="deleteBtn"
+        >
+            Delete Face
+        </button>
+
+        <!-- Result -->
+        <div id="result"></div>
+        
+    </div>
+
+    <script type="module" src="./js/delete-face.js"></script>
+
+</body>
+
+</html>

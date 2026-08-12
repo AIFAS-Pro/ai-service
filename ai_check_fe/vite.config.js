@@ -7,7 +7,8 @@ export default defineConfig({
             input: {
                 main: resolve(__dirname, "index.html"),
                 register: resolve(__dirname, "register.html"),
-                attendance: resolve(__dirname, "attendance.html")
+                attendance: resolve(__dirname, "attendance.html"),
+                delete: resolve(__dirname, "delete-face.html")
             }
         }
     }
