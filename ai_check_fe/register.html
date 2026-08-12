@@ -11,62 +11,54 @@
 
 <body>
 
-<nav class="navbar">
+    <nav class="navbar">
 
-    <div class="logo">
-        AI Attendance
-    </div>
+        <div class="logo">
+            AI Attendance
+        </div>
 
-    <ul class="nav-links">
-        <li>
-            <a href="register.html" class="active">Register Face</a>
-        </li>
+        <ul class="nav-links">
+            <li>
+                <a href="register.html" class="active">Register Face</a>
+            </li>
 
-        <li>
-            <a href="attendance.html">Attendance</a>
-        </li>
-    </ul>
+            <li>
+                <a href="attendance.html">Attendance</a>
+            </li>
+        </ul>
 
-</nav>
+    </nav>
 
-<div class="container">
+    <div class="container">
 
-    <h1>Register Student Face</h1>
+        <h1>Register Student Face</h1>
 
-    <label>School ID</label>
-    <input
-        type="text"
-        id="schoolId"
-        placeholder="e.g. SCH001"
-    >
+        <label>School ID</label>
+        <input type="text" id="schoolId" placeholder="e.g. SCH001">
 
-    <!-- <label>Academic Year</label>
+        <!-- <label>Academic Year</label>
     <input
         type="text"
         id="academicYear"
         placeholder="e.g. 2026-2027"
     > -->
 
-    <label>Face Images</label>
+        <label>Face Images</label>
 
-    <input
-        type="file"
-        id="images"
-        accept="image/*"
-        multiple
-    >
+        <input type="file" id="images" accept="image/*" multiple>
 
-    <div id="imageList"></div>
+        <div id="imageList"></div>
 
-    <button type="button" id="registerBtn">
-        Register Face
-    </button>
+        <button type="button" id="registerBtn">
+            Register Face
+        </button>
 
-    <div id="result"></div>
+        <div id="result"></div>
 
-</div>
+    </div>
 
-<script src="js/register.js"></script>
+    <script type="module" src="js/register.js"></script>
 
 </body>
+
 </html>

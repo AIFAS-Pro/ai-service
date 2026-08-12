@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const AI_URL = window.APP_CONFIG.AI_SERVICE_URL;
 
 const verifyBtn = document.getElementById("verifyBtn");
 
@@ -48,7 +48,7 @@ verifyBtn.addEventListener("click", async () => {
 
     try {
 
-        const response = await fetch(`${API}/verify-attendance`, {
+        const response = await fetch(`${AI_URL}/verify-attendance`, {
             method: "POST",
             body: formData
         });
