@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+import { AI_URL } from "./config.js";
 
 const imageInput = document.getElementById("images");
 const schoolIdInput = document.getElementById("schoolId");
@@ -126,7 +126,7 @@ button.addEventListener("click", async (event) => {
                 </div>
             `;
 
-            const response = await fetch(`${API}/register-face`, {
+            const response = await fetch(`${AI_URL}/register-face`, {
                 method: "POST",
                 body: formData
             });

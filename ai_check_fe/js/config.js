@@ -1,0 +1,1 @@
+export const AI_URL = import.meta.env.VITE_AI_SERVICE_URL;
