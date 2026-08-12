@@ -1,4 +1,4 @@
-const AI_URL = window.APP_CONFIG.AI_SERVICE_URL;
+import { AI_URL } from "./config.js";
 
 const verifyBtn = document.getElementById("verifyBtn");
 
