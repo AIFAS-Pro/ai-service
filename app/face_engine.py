@@ -8,11 +8,16 @@ from typing import Iterable, Iterator
 from insightface.app import FaceAnalysis
 from contextlib import contextmanager, nullcontext, redirect_stderr, redirect_stdout
 
+EMBEDDING_DIMENSIONS = 512
+
 
 class FaceEngine(ABC):
     @abstractmethod
     def image_to_embeddings(self, image_bytes: bytes) -> list[np.ndarray]:
         """Return one normalized embedding per detected face."""
+
+    def warm_up(self) -> None:
+        """Run one throwaway inference so the first real request is not slow."""
 
     @staticmethod
     def best_similarity(query: np.ndarray, candidates: Iterable[np.ndarray]) -> float:
@@ -36,9 +41,12 @@ class InsightFaceBuffaloEngine(FaceEngine):
             self.app = FaceAnalysis(
                 name=settings.insightface_model_name,
                 providers=settings.insightface_providers,
+                allowed_modules=settings.insightface_allowed_modules,
             )
             self.app.prepare(
-                ctx_id=settings.insightface_ctx_id, det_size=settings.detection_size
+                ctx_id=settings.insightface_ctx_id,
+                det_size=settings.detection_size,
+                det_thresh=settings.detection_threshold,
             )
 
     def image_to_embeddings(self, image_bytes: bytes) -> list[np.ndarray]:
@@ -49,9 +57,47 @@ class InsightFaceBuffaloEngine(FaceEngine):
 
         with _suppress_insightface_console_output():
             faces = self.app.get(image)
-        return [
-            _l2_normalize(face.normed_embedding).astype(np.float32) for face in faces
-        ]
+
+        return [face.normed_embedding.astype(np.float32, copy=False) for face in faces]
+
+    def warm_up(self) -> None:
+        width, height = settings.detection_size
+        blank = np.zeros((height, width, 3), dtype=np.uint8)
+
+        with _suppress_insightface_console_output():
+            self.app.get(blank)
+
+            recognition_model = self.app.models.get("recognition")
+            if recognition_model is not None:
+                recognition_model.get_feat(np.zeros((112, 112, 3), dtype=np.uint8))
+
+
+def stack_embeddings(embeddings: Iterable[np.ndarray]) -> np.ndarray:
+    """Pack embeddings into one contiguous ``(count, dimensions)`` float32 matrix."""
+    matrix = np.stack(
+        [np.asarray(embedding, dtype=np.float32).reshape(-1) for embedding in embeddings]
+    )
+    return np.ascontiguousarray(matrix, dtype=np.float32)
+
+
+def match_embeddings(
+    queries: np.ndarray,
+    known_matrix: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Return the best-matching row index and cosine score for every query row.
+
+    One BLAS matrix multiply replaces a Python loop over every query/known pair,
+    which is where verification time went once a class roster grew past a few
+    dozen students.
+    """
+    if queries.size == 0 or known_matrix.size == 0:
+        empty_indices = np.empty(0, dtype=np.intp)
+        return empty_indices, np.empty(0, dtype=np.float32)
+
+    scores = queries @ known_matrix.T
+    best_indices = scores.argmax(axis=1)
+    best_scores = scores[np.arange(scores.shape[0]), best_indices]
+    return best_indices, best_scores
 
 
 def _l2_normalize(embedding: np.ndarray) -> np.ndarray:

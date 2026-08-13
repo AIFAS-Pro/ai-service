@@ -24,3 +24,8 @@ def get_face_engine() -> FaceEngine:
 def load_face_engine() -> FaceEngine:
     """Eagerly load and return the process-wide face engine."""
     return get_face_engine()
+
+
+def is_face_engine_loaded() -> bool:
+    """Whether this process already holds the model, for readiness checks."""
+    return _face_engine is not None

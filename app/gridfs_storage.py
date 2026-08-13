@@ -5,7 +5,6 @@ from app.database import bucket, files_collection
 def save_embedding(
     school_id: str,
     student_id: str,
-    # academic_year: str,
     embedding: np.ndarray,
 ) -> None:
     buffer = io.BytesIO()
@@ -18,7 +17,6 @@ def save_embedding(
         metadata={
             "school_id": school_id,
             "student_id": student_id,
-            # "academic_year": academic_year,
         },
     )
 
@@ -26,13 +24,11 @@ def save_embedding(
 def load_embedding(
     school_id: str,
     student_id: str,
-    # academic_year: str,
 ) -> np.ndarray:
     file = files_collection.find_one(
         {
             "metadata.school_id": school_id,
             "metadata.student_id": student_id,
-            # "metadata.academic_year": academic_year,
         }
     )
 
@@ -40,7 +36,6 @@ def load_embedding(
         raise FileNotFoundError(
             f"No embedding found for student '{student_id}' "
             f"in school '{school_id}' "
-            # f"for academic year '{academic_year}'."
         )
 
     stream = io.BytesIO()
@@ -79,12 +74,10 @@ def delete_embedding(
 
 def load_embeddings(
     school_id: str,
-    # academic_year: str,
     student_ids: list[str] | None = None,
 ) -> dict[str, np.ndarray]:
     query = {
         "metadata.school_id": school_id,
-        # "metadata.academic_year": academic_year,
     }
 
     if student_ids:
