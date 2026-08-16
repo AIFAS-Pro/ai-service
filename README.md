@@ -1,5 +1,6 @@
 # AI Service
-Independent FastAPI service for face detection, embedding generation, embedding storage, and attendance prediction.
+
+Independent FastAPI service for face detection, embedding generation, embedding storage, and attendance prediction. Embeddings are stored in MongoDB GridFS, keyed by `school_id` + `student_id`.
 
 ## Run
 
@@ -11,31 +12,37 @@ cp .env.example .env
 uvicorn app.main:app --host 0.0.0.0 --port 8001
 ```
 
-The first run downloads the InsightFace `buffalo_l` model pack. Use `DEVICE=cpu` for CPU inference or a non-CPU value with CUDA-capable ONNX Runtime providers available. The cosine `SIMILARITY_THRESHOLD` defaults to `0.45` and can be tuned in `.env`. `VERIFICATION_MAX_WORKERS` controls how many verification photos are processed in parallel and defaults to `5`.
+The first run downloads the InsightFace `buffalo_l` model pack, so startup is slow once. The model is loaded and warmed up during app startup; requests sent before that finishes are queued, not slow.
+
+## Configuration
+
+All settings are required and read from `.env` (see `.env.example`):
+
+| Variable | Purpose |
+| --- | --- |
+| `MONGODB_URI`, `MONGODB_DATABASE`, `GRIDFS_BUCKET` | Embedding storage |
+| `SIMILARITY_THRESHOLD` | Cosine score above which a face counts as a match (default `0.45`) |
+| `VERIFICATION_MAX_WORKERS` | How many attendance photos are processed in parallel |
+| `DEVICE` | `cpu`, or any other value to request CUDA execution providers |
+| `INSIGHTFACE_MODEL_NAME`, `INSIGHTFACE_ALLOWED_MODULES` | Model pack and enabled modules |
+| `DETECTION_WIDTH`, `DETECTION_HEIGHT`, `DETECTION_THRESHOLD` | Detector input size and confidence floor |
+
+`requirements.txt` pins `onnxruntime`, the CPU-only build. Setting `DEVICE` to a non-CPU value has no effect with that wheel — ONNX Runtime drops the unavailable `CUDAExecutionProvider` and silently runs on CPU. Real GPU inference needs `onnxruntime-gpu` plus a matching CUDA 12 / cuDNN 9 runtime.
 
 ## APIs
 
-- `GET /health` returns service status.
-- `POST /register-face` accepts `student_id`, `image`, and optional `scope`; saves `student_<id>.npy` under the scope folder when provided.
-- `POST /verify-attendance` accepts one or more `images` files (legacy single `image` is also accepted) and optional `scope`; processes uploaded photos in parallel, compares detected faces only against embeddings in that scope, and returns present/absent records.
+- `GET /health` — returns service status and whether the model is loaded.
+- `POST /register-face` — form fields `school_id`, `student_id` and file `image`. The image must contain exactly one detectable face. Replaces any existing embedding for that student.
+- `POST /verify-attendance` — form field `school_id`, one or more `images` files, and optional `student_ids` (comma-separated) to restrict the roster compared against. Photos are processed in parallel; returns per-image face counts, matches, and each student's `Present`/`Absent` status.
+- `DELETE /delete-face` — form fields `school_id`, `student_id`. Returns 404 if no embedding exists.
 
 The model adapter is isolated in `app/face_engine.py` so InsightFace Buffalo_L can later be replaced by another implementation without changing Django or React.
 
+## Test frontend
 
-## Run without backend/frontend
-
-Use `register_student.py` and `verify_student.py` when you want to test the AI service locally without starting Django or React. Run them from the `ai-service/` directory after installing this service's requirements.
-
-Register a single student image and create `../media/embeddings/SCH001/10/A/student_101.npy`:
+`ai_check_fe/` is a small Vite-served static frontend for exercising the three endpoints by hand. Set `VITE_AI_SERVICE_URL` to the service URL, then:
 
 ```bash
-python register_student.py --student-id 101 --scope SCH001/10/A --image ../media/students/student101.jpg
+npm install
+npm run dev
 ```
-
-Verify one or more classroom images against existing local embeddings:
-
-```bash
-python verify_student.py --scope SCH001/10/A --image ../media/attendance/front.jpg ../media/attendance/back.jpg
-```
-
-Use the same `--scope` value for students and classroom photos in one school-code/class/section. Without `--scope`, the service falls back to the legacy global embeddings folder. `register_student.py` prints only the created-embedding JSON. `verify_student.py` prints only the same JSON shape as `POST /verify-attendance`, including `detected_faces`, `matches`, and each student's `Present`/`Absent` status; InsightFace provider/model logs are suppressed so the output can be parsed directly.
