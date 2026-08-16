@@ -1,85 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Attendance Verification</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-
     <nav class="navbar">
-
         <div class="logo">
             AI Attendance
         </div>
 
         <ul class="nav-links">
-            <li>
-                <a href="register.html">Register Face</a>
-            </li>
-
-            <li>
-                <a href="attendance.html" class="active">Attendance</a>
-            </li>
-
-            <li>
-                <a href="delete-face.html">Delete Face</a>
-            </li>
+            <li><a href="register.html">Register Face</a></li>
+            <li><a href="attendance.html" class="active">Attendance</a></li>
+            <li><a href="delete-face.html">Delete Face</a></li>
         </ul>
-
     </nav>
 
     <div class="container">
-
         <h1>Attendance Verification</h1>
 
         <label>School ID</label>
-        <input
-            type="text"
-            id="schoolId"
-            placeholder="SCH001"
-        >
-
-        <!-- <label>Academic Year</label>
-        <input
-            type="text"
-            id="academicYear"
-            placeholder="2026-2027"
-        > -->
+        <input type="text" id="schoolId" placeholder="SCH001">
 
         <label>Student IDs (Optional)</label>
-        <input
-            type="text"
-            id="studentIds"
-            placeholder="ST001,ST002,ST003"
-        >
+        <input type="text" id="studentIds" placeholder="ST001,ST002,ST003">
 
         <label>Attendance Images</label>
-        <input
-            type="file"
-            id="images"
-            multiple
-            accept="image/*"
-        >
+        <input type="file" id="images" multiple accept="image/*">
 
-        <button id="verifyBtn">
-            Verify Attendance
-        </button>
+        <button id="verifyBtn">Verify Attendance</button>
 
         <div id="result">
-
             <div id="summary"></div>
-
             <div class="table-container" id="attendanceTable"></div>
-
         </div>
-
     </div>
 
     <script type="module" src="./js/attendance.js"></script>
 
 </body>
-
 </html>

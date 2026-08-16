@@ -1,54 +1,32 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Face</title>
-
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-
     <nav class="navbar">
-
         <div class="logo">
             AI Attendance
         </div>
 
         <ul class="nav-links">
-            <li>
-                <a href="register.html" class="active">Register Face</a>
-            </li>
-
-            <li>
-                <a href="attendance.html">Attendance</a>
-            </li>
-
-            <li>
-                <a href="delete-face.html">Delete Face</a>
-            </li>
+            <li><a href="register.html" class="active">Register Face</a></li>
+            <li><a href="attendance.html">Attendance</a></li>
+            <li><a href="delete-face.html">Delete Face</a></li>
         </ul>
-
     </nav>
 
     <div class="container">
-
         <h1>Register Student Face</h1>
 
         <label>School ID</label>
         <input type="text" id="schoolId" placeholder="e.g. SCH001">
 
-        <!-- <label>Academic Year</label>
-    <input
-        type="text"
-        id="academicYear"
-        placeholder="e.g. 2026-2027"
-    > -->
 
         <label>Face Images</label>
-
         <input type="file" id="images" accept="image/*" multiple>
 
         <div id="imageList"></div>
@@ -58,11 +36,9 @@
         </button>
 
         <div id="result"></div>
-
     </div>
 
     <script type="module" src="./js/register.js"></script>
-
+    
 </body>
-
 </html>

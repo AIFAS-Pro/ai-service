@@ -57,15 +57,9 @@ deleteBtn.addEventListener("click", async () => {
         result.innerHTML = `
             <div class="success-card">
                 <h3>Face Deleted Successfully</h3>
-                <p>
-                    ${data.message}
-                </p>
-                <p>
-                    <strong>School ID:</strong> ${schoolId}
-                </p>
-                <p>
-                    <strong>Student ID:</strong> ${studentId}
-                </p>
+                <p>${data.message}</p>
+                <p><strong>School ID:</strong> ${schoolId}</p>
+                <p><strong>Student ID:</strong> ${studentId}</p>
             </div>
         `;
 
