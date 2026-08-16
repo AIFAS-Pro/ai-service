@@ -2,11 +2,7 @@ import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from app.config import settings
 from app.face_engine import FaceEngine, match_embeddings, stack_embeddings
-from app.gridfs_storage import (
-    save_embedding,
-    delete_embedding,
-    load_embeddings,
-)
+from app.gridfs_storage import save_embedding, delete_embedding, load_embeddings
 
 
 def register_student_face(
@@ -42,30 +38,6 @@ def register_student_face(
     }
 
 
-def load_known_embeddings(
-    school_id: str,
-    student_ids: list[str] | None = None,
-) -> dict[str, np.ndarray]:
-    return load_embeddings(
-        school_id=school_id,
-        student_ids=student_ids,
-    )
-
-
-def verify_attendance_image(
-    face_engine: FaceEngine,
-    image_bytes: bytes,
-    school_id: str,
-    student_ids: list[str] | None = None,
-) -> dict[str, object]:
-    return verify_attendance_images(
-        face_engine=face_engine,
-        image_bytes_list=[image_bytes],
-        school_id=school_id,
-        student_ids=student_ids,
-    )
-
-
 def verify_attendance_images(
     face_engine: FaceEngine,
     image_bytes_list: list[bytes],
@@ -76,7 +48,7 @@ def verify_attendance_images(
     if not image_bytes_list:
         raise ValueError("At least one attendance image is required.")
 
-    known_embeddings = load_known_embeddings(
+    known_embeddings = load_embeddings(
         school_id=school_id,
         student_ids=student_ids,
     )

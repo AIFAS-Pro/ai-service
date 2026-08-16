@@ -8,8 +8,6 @@ from typing import Iterable, Iterator
 from insightface.app import FaceAnalysis
 from contextlib import contextmanager, nullcontext, redirect_stderr, redirect_stdout
 
-EMBEDDING_DIMENSIONS = 512
-
 
 class FaceEngine(ABC):
     @abstractmethod
@@ -19,19 +17,9 @@ class FaceEngine(ABC):
     def warm_up(self) -> None:
         """Run one throwaway inference so the first real request is not slow."""
 
-    @staticmethod
-    def best_similarity(query: np.ndarray, candidates: Iterable[np.ndarray]) -> float:
-        query_norm = _l2_normalize(query)
-        scores = [
-            float(np.dot(query_norm, _l2_normalize(candidate)))
-            for candidate in candidates
-        ]
-        return max(scores) if scores else 0.0
-
 
 class InsightFaceBuffaloEngine(FaceEngine):
     """InsightFace Buffalo_L adapter used by the AI service.
-
     The rest of the system depends only on the FaceEngine contract, so Django,
     React, and API payloads remain unchanged if this adapter is replaced later.
     """
@@ -85,7 +73,6 @@ def match_embeddings(
     known_matrix: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Return the best-matching row index and cosine score for every query row.
-
     One BLAS matrix multiply replaces a Python loop over every query/known pair,
     which is where verification time went once a class roster grew past a few
     dozen students.
@@ -100,20 +87,11 @@ def match_embeddings(
     return best_indices, best_scores
 
 
-def _l2_normalize(embedding: np.ndarray) -> np.ndarray:
-    embedding = np.asarray(embedding, dtype=np.float32)
-    norm = np.linalg.norm(embedding)
-    if norm == 0:
-        return embedding
-    return embedding / norm
-
-
 @contextmanager
 def _suppress_insightface_console_output(
     redirect_console: bool = False,
 ) -> Iterator[None]:
     """Suppress FutureWarnings without redirecting stdout during parallel inference.
-
     stdout/stderr redirection is process-global and not thread-safe, so it is only
     used for model startup logs before parallel verification workers run.
     """

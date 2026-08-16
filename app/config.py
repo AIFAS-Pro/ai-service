@@ -14,7 +14,6 @@ class Settings(BaseSettings):
     detection_height: int
     detection_threshold: float
     insightface_allowed_modules: list[str]
-    mongodb_timeout_ms: int
 
     model_config = SettingsConfigDict(
         env_file=".env",
